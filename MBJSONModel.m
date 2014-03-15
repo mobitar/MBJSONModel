@@ -170,7 +170,12 @@
 {
     NSAssert([self class] == [sourceModel class], @"Cannot copy properties of models of different classes");
     NSArray *properties = [sourceModel extendedArrayOfProperties];
-    for(NSString *propertyName in properties) {
+    [self updateWithValuesOfModel:sourceModel forKeys:properties];
+}
+
+- (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel forKeys:(NSArray *)keys
+{
+    for(NSString *propertyName in keys) {
         [self setValue:[sourceModel valueForKey:propertyName] forKey:propertyName];
     }
 }

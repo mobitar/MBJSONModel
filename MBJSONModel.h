@@ -60,6 +60,7 @@
  
  */
 - (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel;
+- (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel forKeys:(NSArray *)keys;
 
 /**
  Should be overridden by subclasses. Should return a JSONKey -> local property key mapping.

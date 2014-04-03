@@ -133,7 +133,7 @@
 - (void)setValuesFromJSONDictionary:(NSDictionary *)dictionary ignoreNil:(BOOL)ignoreNil
 {
     NSDictionary *mapping = [[self class] JSONKeyTranslationDictionary];
-    for (NSString *JSONKey in [dictionary allKeys]) {
+    for (NSString *JSONKey in mapping.allKeys) {
         id mappedKey = [mapping objectForKey:JSONKey];
         id value = [dictionary objectForKey:JSONKey];
         if((!value || [value isEqual:[NSNull null]]) && ignoreNil) {
@@ -169,6 +169,14 @@
             }
         }
     }
+}
+
+- (void)setNilValueForKey:(NSString *)key
+{
+    @try {
+        [self setValue:@(0) forKey:key];
+    }
+    @catch (NSException *exception) {}
 }
 
 - (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel

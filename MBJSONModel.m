@@ -19,7 +19,7 @@
 {
     if(self = [super init])
     {
-        [self setValuesFromJSONDictionary:dictionary];
+        [self setValuesFromJSONDictionary:dictionary ignoreNil:YES];
     }
 
     return self;

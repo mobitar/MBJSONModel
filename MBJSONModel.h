@@ -35,8 +35,15 @@
 
 /**
  Converts JSON keys to local @property keys, then sets respective values.
+ IMPORTANT: Keys not present in this dictionary will set the model's property for that key to nil.
+ To avoid this behavior, use setValuesFromJSONDictionary:ignoreNil:
  */
 - (void)setValuesFromJSONDictionary:(NSDictionary *)dictionary;
+
+/**
+ Similar to setValuesFromJSONDictionary, but can skip nil values so that they're not overriden.
+ */
+- (void)setValuesFromJSONDictionary:(NSDictionary *)dictionary ignoreNil:(BOOL)ignoreNil;
 
 /**
  Overridden by subclasses to manually transform a JSON value into a native value.

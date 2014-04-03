@@ -127,11 +127,16 @@
 
 - (void)setValuesFromJSONDictionary:(NSDictionary *)dictionary
 {
+    [self setValuesFromJSONDictionary:dictionary ignoreNil:NO];
+}
+
+- (void)setValuesFromJSONDictionary:(NSDictionary *)dictionary ignoreNil:(BOOL)ignoreNil
+{
     NSDictionary *mapping = [[self class] JSONKeyTranslationDictionary];
     for (NSString *JSONKey in [dictionary allKeys]) {
         id mappedKey = [mapping objectForKey:JSONKey];
         id value = [dictionary objectForKey:JSONKey];
-        if(!value || [value isEqual:[NSNull null]]) {
+        if((!value || [value isEqual:[NSNull null]]) && ignoreNil) {
             continue;
         }
         if(mappedKey) {
@@ -139,7 +144,7 @@
             if([mappedKey isKindOfClass:[NSString class]]) {
                 transformer = [self.class valueTransformerForKey:mappedKey];
             }
-
+            
             if(transformer) {
                 value = [transformer transformedValue:value];
                 if(value) {

@@ -189,7 +189,12 @@
 - (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel forKeys:(NSArray *)keys
 {
     for(NSString *propertyName in keys) {
-        [self setValue:[sourceModel valueForKey:propertyName] forKey:propertyName];
+        id value = [sourceModel valueForKey:propertyName];
+        if([value conformsToProtocol:@protocol(NSCopying)]) {
+            [self setValue:[value copy] forKey:propertyName];
+        } else {
+            [self setValue:value forKey:propertyName];
+        }
     }
 }
 
@@ -228,6 +233,18 @@
     }
     
     return models;
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    MBJSONModel *model = [[[self class] alloc] init];
+    if(model) {
+        [model updateWithValuesOfModel:self];
+    }
+    
+    return model;
 }
 
 @end

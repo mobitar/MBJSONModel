@@ -11,7 +11,7 @@
 
 #import "NSDictionary+MBJSONModel.h"
 
-@interface MBJSONModel : NSObject
+@interface MBJSONModel : NSObject <NSCopying>
 
 /**
  Designated initializer. Creates a model then calls -setValuesFromJSONDictionary

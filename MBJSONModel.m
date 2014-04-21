@@ -189,6 +189,14 @@
 - (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel forKeys:(NSArray *)keys
 {
     for(NSString *propertyName in keys) {
+        
+        NSString *firstLetter = [[propertyName substringToIndex:1] capitalizedString];
+        NSString *capitlizedPropertyName = [firstLetter stringByAppendingString:[propertyName substringFromIndex:1]];
+        NSString *selectorName = [[@"set" stringByAppendingString:capitlizedPropertyName] stringByAppendingString:@":"];
+        if(![self respondsToSelector:NSSelectorFromString(selectorName)]) {
+            continue;
+        }
+        
         id value = [sourceModel valueForKey:propertyName];
         if([value conformsToProtocol:@protocol(NSCopying)]) {
             [self setValue:[value copy] forKey:propertyName];

@@ -135,23 +135,37 @@
     NSDictionary *mapping = [[self class] JSONKeyTranslationDictionary];
     for (NSString *JSONKey in mapping.allKeys) {
         id mappedKey = [mapping objectForKey:JSONKey];
-        id value = [dictionary objectForKey:JSONKey];
+        id value = nil;
+        
+        if([JSONKey rangeOfString:@"."].location != NSNotFound) {
+            // trace keypath
+            NSScanner *scanner = [NSScanner scannerWithString:JSONKey];
+            BOOL hasResult = YES;
+            while(!scanner.isAtEnd && hasResult) {
+                NSString *currentKeyPath;
+                hasResult = [scanner scanUpToString:@"." intoString:&currentKeyPath];
+                NSInteger targetLocation = scanner.scanLocation + 1;
+                if(targetLocation < scanner.string.length) {
+                    [scanner setScanLocation:targetLocation];
+                }
+                
+                if(currentKeyPath.length) {
+                    if(value) {
+                        value = value[currentKeyPath];
+                    } else {
+                        value = dictionary[currentKeyPath];
+                    }
+                }
+            }
+
+        } else {
+            value = [dictionary objectForKey:JSONKey];
+        }
         if((!value || [value isEqual:[NSNull null]]) && ignoreNil) {
             continue;
         }
         if(mappedKey) {
-            MBValueTransformer *transformer = nil;
-            if([mappedKey isKindOfClass:[NSString class]]) {
-                transformer = [self.class valueTransformerForKey:mappedKey];
-            }
-            
-            if(transformer) {
-                value = [transformer transformedValue:value];
-                if(value) {
-                    [self setValue:value forKey:mappedKey];
-                }
-            }
-            else if([mappedKey isKindOfClass:[NSDictionary class]]) {
+            if([mappedKey isKindOfClass:[NSDictionary class]]) {
                 BOOL isArray = [mappedKey[@"isArray"] boolValue];
                 Class relationshipClass = NSClassFromString(mappedKey[@"class"]);
                 if(relationshipClass) {
@@ -161,10 +175,32 @@
                         [self setValue:[relationshipClass modelFromJSONDictionary:value] forKey:mappedKey[@"relationship"]];
                     }
                 }
-            }
-            else {
-                if([value isEqual:[NSNull null]] == NO) {
-                    [self setValue:value forKey:mappedKey];
+            } else {
+                MBValueTransformer *transformer = nil;
+                if([mappedKey isKindOfClass:[NSString class]]) {
+                    transformer = [self.class valueTransformerForKey:mappedKey];
+                }
+                
+                if(!transformer) {
+                    NSString *selectorString = [mappedKey stringByAppendingString:@"JSONValueTransformer"];
+                    if([self respondsToSelector:NSSelectorFromString(selectorString)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                        transformer = [self performSelector:NSSelectorFromString(selectorString)];
+#pragma clang diagnostic pop
+                    }
+                }
+                if(transformer) {
+                    
+                    value = [transformer transformedValue:value];
+                    if(value) {
+                        [self setValue:value forKey:mappedKey];
+                    }
+                }
+                else {
+                    if([value isEqual:[NSNull null]] == NO) {
+                        [self setValue:value forKey:mappedKey];
+                    }
                 }
             }
         }

@@ -8,6 +8,14 @@
 #import "MBJSONModel.h"
 #import <objc/runtime.h>
 
+NSString *MBSetSelectorForKey(NSString *key)
+{
+    NSString *firstLetter = [[key substringToIndex:1] capitalizedString];
+    NSString *capitlizedPropertyName = [firstLetter stringByAppendingString:[key substringFromIndex:1]];
+    NSString *selectorName = [[@"set" stringByAppendingString:capitlizedPropertyName] stringByAppendingString:@":"];
+    return selectorName;
+}
+
 @implementation MBJSONModel
 
 - (NSString *)description
@@ -57,9 +65,11 @@
     
     NSArray *properties = [self extendedArrayOfProperties];
     for (NSString *propertyName in properties) {
-        id value = [self valueForKey:propertyName];
-        if (value) {
-            [valuesDictionary setObject:value forKey:propertyName];
+        if([self respondsToSelector:NSSelectorFromString(propertyName)]) {
+            id value = [self valueForKey:propertyName];
+            if (value) {
+                [valuesDictionary setObject:value forKey:propertyName];
+            }
         }
     }
     
@@ -225,10 +235,7 @@
 - (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel forKeys:(NSArray *)keys
 {
     for(NSString *propertyName in keys) {
-        
-        NSString *firstLetter = [[propertyName substringToIndex:1] capitalizedString];
-        NSString *capitlizedPropertyName = [firstLetter stringByAppendingString:[propertyName substringFromIndex:1]];
-        NSString *selectorName = [[@"set" stringByAppendingString:capitlizedPropertyName] stringByAppendingString:@":"];
+        NSString *selectorName = MBSetSelectorForKey(propertyName);
         if(![self respondsToSelector:NSSelectorFromString(selectorName)]) {
             continue;
         }

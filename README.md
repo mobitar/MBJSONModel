@@ -106,13 +106,14 @@ There are two dictionary instance methods:
 User *user = [User modelFromJSONDictionary:@{@"user_name" : @"Jon Snow"}];
 ```
 
+<br>
 ```objective-c
 NSLog([user dictionaryFromObjectProperties]);
 ```
 Output:
 > {"name" : "Jon Snow"}
 
-
+<br>
 ```objective-c
 NSLog([user JSONDictionaryRepresentation]);
 ```

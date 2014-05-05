@@ -123,7 +123,7 @@ Output:
 Contact
 -------
 
-**Mo Bitar** | [@bitario](https://twitter.com/bitario)
+**[Mo Bitar](http://bitar.io)** | [@bitario](https://twitter.com/bitario)
 
 License
 -------

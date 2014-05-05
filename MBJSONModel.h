@@ -24,7 +24,7 @@
 - (NSDictionary *)dictionaryFromObjectProperties;
 
 /**
- Returns a dictionary where keys are converted to JSONKeys using -JSONKeyForPropertyName:.
+ Returns a dictionary where keys are converted to JSONKeys using -JSONKeyForPropertyName:
  */
 - (NSDictionary *)JSONDictionaryRepresentation;
 

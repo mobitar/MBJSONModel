@@ -176,13 +176,22 @@ NSString *MBSetSelectorForKey(NSString *key)
         }
         if(mappedKey) {
             if([mappedKey isKindOfClass:[NSDictionary class]]) {
-                BOOL isArray = [mappedKey[@"isArray"] boolValue];
-                Class relationshipClass = NSClassFromString(mappedKey[@"class"]);
-                if(relationshipClass) {
-                    if(isArray) {
-                        [self setValue:[relationshipClass arrayOfModelsFromJSONDictionaryArray:value] forKey:mappedKey[@"relationship"]];
-                    } else {
-                        [self setValue:[relationshipClass modelFromJSONDictionary:value] forKey:mappedKey[@"relationship"]];
+                BOOL isDate = [mappedKey[@"isDate"] boolValue];
+                if(isDate) {
+                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                    [formatter setDateFormat:mappedKey[@"format"]];
+                    [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+                    [self setValue:[formatter dateFromString:value] forKeyPath:mappedKey[@"property"]];
+                } else {
+                    // relationship
+                    BOOL isArray = [mappedKey[@"isArray"] boolValue];
+                    Class relationshipClass = NSClassFromString(mappedKey[@"class"]);
+                    if(relationshipClass) {
+                        if(isArray) {
+                            [self setValue:[relationshipClass arrayOfModelsFromJSONDictionaryArray:value] forKey:mappedKey[@"relationship"]];
+                        } else {
+                            [self setValue:[relationshipClass modelFromJSONDictionary:value] forKey:mappedKey[@"relationship"]];
+                        }
                     }
                 }
             } else {

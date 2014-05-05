@@ -4,17 +4,14 @@ Quick and lightweight JSON → NSObject translation.
 
 Example
 -------
-```
+```objective-c
 @interface User : MBJSONModel
-
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic) NSDate *birthDate;
 @property (nonatomic) NSArray *tweets;
-
 @end
 
 @implementation User
-
 + (NSDictionary *)JSONKeyTranslationDictionary
 {
     return @{
@@ -23,7 +20,6 @@ Example
 				@"data.user.tweets" : @{@"class" : NSStringFromClass([Tweet class]), @"relationship" : @"tweets", @"isArray" : @YES},
               }
 }
-
 @end
 ```
 
@@ -52,27 +48,26 @@ User *userObj = [User modelFromJSONDictionary:jsonDict];
 
 Advanced Options
 -------
+####Custom value trasformers
 You can override a transformer method to manually transform a JSON object to native. Say you have the following JSON dictionary:
 ```
 {
-	"text" : "hello\nworld"
+	"custom_text" : "hello\nworld"
 }
 ```
 
 and the following translation dictionary
 
-```
+```objective-c
 + (NSDictionary *)JSONKeyTranslationDictionary
 {
-    return @{
-				@"custom_text" : @"text",
-            }
+    return @{@"custom_text" : @"text"}
 }
 ```
 
 and wanted to change the text to "hello world" before translating to native, you can implement
 
-```
+```objective-c
 - (MBValueTransformer *)textJSONValueTransformer
 {
 	return [MBValueTransformer transformerWithBlock:^id(NSString *incomingString) {
@@ -86,7 +81,7 @@ This method will automatically be called by MBJSONModel during the translation p
 ####NSCopying
 MBJSONModels conform to NSCopying, which means you can make a copy of any model object:
 
-```
+```objective-c
 User *user = [User modelFromJSONDictionary:@{@"user_name" : @"Jon Snow"}];
 User *userCopy = [user copy];
 assert([user.name isEqual:userCopy.name]); // Passes
@@ -96,7 +91,7 @@ assert([user.name isEqual:userCopy.name]); // Passes
 
 There are two dictionary instance methods:
 
-```
+```objective-c
 /**
  Returns a dictionary where keys are named exactly as the @property is named
  */
@@ -107,18 +102,18 @@ There are two dictionary instance methods:
 - (NSDictionary *)JSONDictionaryRepresentation;
 ```
 
-```
+```objective-c
 User *user = [User modelFromJSONDictionary:@{@"user_name" : @"Jon Snow"}];
 ```
 
-```
+```objective-c
 NSLog([user dictionaryFromObjectProperties]);
 ```
 
 Output:
 > {"name" : "Jon Snow"}
 
-```
+```objective-c
 NSLog([user JSONDictionaryRepresentation]);
 ```
 

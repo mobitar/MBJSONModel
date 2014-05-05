@@ -41,7 +41,7 @@ Then, if you have a JSON dictionary that looks like this:
 ```
 
 You can easily do:
-```
+```objective-c
 User *userObj = [User modelFromJSONDictionary:jsonDict];
 ```
 
@@ -109,14 +109,13 @@ User *user = [User modelFromJSONDictionary:@{@"user_name" : @"Jon Snow"}];
 ```objective-c
 NSLog([user dictionaryFromObjectProperties]);
 ```
-
 Output:
 > {"name" : "Jon Snow"}
+
 
 ```objective-c
 NSLog([user JSONDictionaryRepresentation]);
 ```
-
 Output:
 > {"user_name" : "Jon Snow"}
 

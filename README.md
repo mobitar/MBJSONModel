@@ -1,4 +1,5 @@
-<img src="icon.png" align="middle" width="200">
+<br>
+<img src="icon.png" align="middle" width="180">
 #MBJSONModel
 
 Quick and lightweight JSON → NSObject translation.

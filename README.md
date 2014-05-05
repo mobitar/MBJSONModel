@@ -111,6 +111,7 @@ NSLog([user dictionaryFromObjectProperties]);
 ```
 Output:
 > {"name" : "Jon Snow"}
+
 <br>
 ```objective-c
 NSLog([user JSONDictionaryRepresentation]);

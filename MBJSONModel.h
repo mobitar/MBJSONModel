@@ -33,6 +33,10 @@
  */
 - (NSData *)JSONDataRepresentation;
 
+
+/** Returns an array of strings representing each property the object has including its superclasses (not including NSObject) */
+- (NSArray *)extendedArrayOfProperties;
+
 /**
  Converts JSON keys to local @property keys, then sets respective values.
  IMPORTANT: Keys not present in this dictionary will set the model's property for that key to nil.

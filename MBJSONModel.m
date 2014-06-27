@@ -202,15 +202,14 @@ NSString *MBSetSelectorForKey(NSString *key)
                 
                 if(!transformer) {
                     NSString *selectorString = [mappedKey stringByAppendingString:@"JSONValueTransformer"];
-                    if([self respondsToSelector:NSSelectorFromString(selectorString)]) {
+                    if([self.class respondsToSelector:NSSelectorFromString(selectorString)]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                        transformer = [self performSelector:NSSelectorFromString(selectorString)];
+                        transformer = [self.class performSelector:NSSelectorFromString(selectorString)];
 #pragma clang diagnostic pop
                     }
                 }
                 if(transformer) {
-                    
                     value = [transformer transformedValue:value];
                     if(value) {
                         [self setValue:value forKey:mappedKey];

@@ -306,4 +306,26 @@ NSString *MBSetSelectorForKey(NSString *key)
     return model;
 }
 
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    NSDictionary *dictionary = [self dictionaryFromObjectProperties];
+    for(NSString *key in dictionary) {
+        [aCoder encodeObject:dictionary[key] forKey:key];
+    }
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super init]) {
+        NSArray *properties = [self extendedArrayOfProperties];
+        for(NSString *property in properties) {
+            [self setValue:[aDecoder decodeObjectForKey:property] forKey:property];
+        }
+    }
+    
+    return self;
+}
+
 @end

@@ -4,25 +4,25 @@
 
 #import <Foundation/Foundation.h>
 
-typedef id (^BGMValueTransformerBlock)(id);
+typedef id (^MBValueTransformerBlock)(id);
 
 //
 // A value transformer supporting block-based transformation.
 //
 @interface MBValueTransformer : NSValueTransformer
 
-@property (nonatomic, copy, readonly) BGMValueTransformerBlock forwardBlock;
-@property (nonatomic, copy, readonly) BGMValueTransformerBlock reverseBlock;
+@property (nonatomic, copy, readonly) MBValueTransformerBlock forwardBlock;
+@property (nonatomic, copy, readonly) MBValueTransformerBlock reverseBlock;
 
 // Returns a transformer which transforms values using the given block. Reverse
 // transformations will not be allowed.
-+ (instancetype)transformerWithBlock:(BGMValueTransformerBlock)transformationBlock;
++ (instancetype)transformerWithBlock:(MBValueTransformerBlock)transformationBlock;
 
 // Returns a transformer which transforms values using the given block, for
 // forward or reverse transformations.
-+ (instancetype)reversibleTransformerWithBlock:(BGMValueTransformerBlock)transformationBlock;
++ (instancetype)reversibleTransformerWithBlock:(MBValueTransformerBlock)transformationBlock;
 
 // Returns a transformer which transforms values using the given blocks.
-+ (instancetype)reversibleTransformerWithForwardBlock:(BGMValueTransformerBlock)forwardBlock reverseBlock:(BGMValueTransformerBlock)reverseBlock;
++ (instancetype)reversibleTransformerWithForwardBlock:(MBValueTransformerBlock)forwardBlock reverseBlock:(MBValueTransformerBlock)reverseBlock;
 
 @end

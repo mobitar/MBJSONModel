@@ -8,7 +8,7 @@
 // Any BGMValueTransformer supporting reverse transformation. Necessary because
 // +allowsReverseTransformation is a class method.
 //
-@interface MTLReversibleValueTransformer : MBValueTransformer
+@interface MBReversibleValueTransformer : MBValueTransformer
 @end
 
 @interface MBValueTransformer ()
@@ -19,19 +19,19 @@
 
 #pragma mark Lifecycle
 
-+ (instancetype)transformerWithBlock:(BGMValueTransformerBlock)transformationBlock {
++ (instancetype)transformerWithBlock:(MBValueTransformerBlock)transformationBlock {
 	return [[self alloc] initWithForwardBlock:transformationBlock reverseBlock:nil];
 }
 
-+ (instancetype)reversibleTransformerWithBlock:(BGMValueTransformerBlock)transformationBlock {
++ (instancetype)reversibleTransformerWithBlock:(MBValueTransformerBlock)transformationBlock {
 	return [self reversibleTransformerWithForwardBlock:transformationBlock reverseBlock:transformationBlock];
 }
 
-+ (instancetype)reversibleTransformerWithForwardBlock:(BGMValueTransformerBlock)forwardBlock reverseBlock:(BGMValueTransformerBlock)reverseBlock {
-	return [[MTLReversibleValueTransformer alloc] initWithForwardBlock:forwardBlock reverseBlock:reverseBlock];
++ (instancetype)reversibleTransformerWithForwardBlock:(MBValueTransformerBlock)forwardBlock reverseBlock:(MBValueTransformerBlock)reverseBlock {
+	return [[MBReversibleValueTransformer alloc] initWithForwardBlock:forwardBlock reverseBlock:reverseBlock];
 }
 
-- (id)initWithForwardBlock:(BGMValueTransformerBlock)forwardBlock reverseBlock:(BGMValueTransformerBlock)reverseBlock {
+- (id)initWithForwardBlock:(MBValueTransformerBlock)forwardBlock reverseBlock:(MBValueTransformerBlock)reverseBlock {
 	NSParameterAssert(forwardBlock != nil);
 
 	self = [super init];
@@ -59,11 +59,11 @@
 
 @end
 
-@implementation MTLReversibleValueTransformer
+@implementation MBReversibleValueTransformer
 
 #pragma mark Lifecycle
 
-- (id)initWithForwardBlock:(BGMValueTransformerBlock)forwardBlock reverseBlock:(BGMValueTransformerBlock)reverseBlock {
+- (id)initWithForwardBlock:(MBValueTransformerBlock)forwardBlock reverseBlock:(MBValueTransformerBlock)reverseBlock {
 	NSParameterAssert(reverseBlock != nil);
 	return [super initWithForwardBlock:forwardBlock reverseBlock:reverseBlock];
 }

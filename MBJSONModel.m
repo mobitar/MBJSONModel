@@ -25,8 +25,7 @@ NSString *MBSetSelectorForKey(NSString *key)
 
 - (instancetype)initWithJSONDictionary:(NSDictionary *)dictionary
 {
-    if(self = [super init])
-    {
+    if(self = [super init]) {
         [self setValuesFromJSONDictionary:dictionary ignoreNil:YES];
     }
 
@@ -115,8 +114,7 @@ NSString *MBSetSelectorForKey(NSString *key)
 {
     NSDictionary *mapping = [self.class JSONKeyTranslationDictionary];
     NSString *JSONKey = [[mapping allKeysForObject:propertyName] lastObject];
-    if(JSONKey.length)
-    {
+    if(JSONKey.length) {
         return JSONKey;
     }
 
@@ -126,8 +124,7 @@ NSString *MBSetSelectorForKey(NSString *key)
 - (NSDictionary *)dictionaryByConvertingKeysToJSONKeysFromDictionary:(NSDictionary *)dictionary
 {
     NSMutableDictionary *JSONDictionary = [NSMutableDictionary new];
-    for(NSString *key in dictionary)
-    {
+    for(NSString *key in dictionary) {
         NSString *JSONKey = [self JSONKeyForPropertyName:key];
         [JSONDictionary setObject:dictionary[key] forKey:JSONKey];
     }
@@ -286,8 +283,7 @@ NSString *MBSetSelectorForKey(NSString *key)
 {
     NSMutableArray *models = [NSMutableArray new];
 
-    for(NSDictionary *jsonDic in dictionaries)
-    {
+    for(NSDictionary *jsonDic in dictionaries) {
         [models addObject:[self modelFromJSONDictionary:jsonDic]];
     }
     
@@ -296,7 +292,7 @@ NSString *MBSetSelectorForKey(NSString *key)
 
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
     MBJSONModel *model = [[[self class] alloc] init];
     if(model) {

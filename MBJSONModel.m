@@ -177,7 +177,12 @@ NSString *MBSetSelectorForKey(NSString *key)
                 if(isDate) {
                     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                     [formatter setDateFormat:mappedKey[@"format"]];
-                    [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+                    NSTimeZone *timezone = mappedKey[@"timezone"];
+                    if(timezone) {
+                        [formatter setTimeZone:timezone];
+                    } else {
+                        [formatter setTimeZone:[NSTimeZone systemTimeZone]];
+                    }
                     [self setValue:[formatter dateFromString:value] forKeyPath:mappedKey[@"property"]];
                 } else {
                     // relationship

@@ -251,12 +251,17 @@ NSString *MBSetSelectorForKey(NSString *key)
         }
         
         id value = [sourceModel valueForKey:propertyName];
-        if([value conformsToProtocol:@protocol(NSCopying)]) {
+        if([value conformsToProtocol:@protocol(NSCopying)] && [self shouldCopyValueForKey:propertyName]) {
             [self setValue:[value copy] forKey:propertyName];
         } else {
             [self setValue:value forKey:propertyName];
         }
     }
+}
+
+- (BOOL)shouldCopyValueForKey:(NSString *)key
+{
+    return YES;
 }
 
 + (MBValueTransformer *)valueTransformerForKey:(NSString *)key

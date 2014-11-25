@@ -68,10 +68,15 @@
 
 /**
  Copies all object properties (including superclasses up to but not including MBJSONModel) from the source model to the receiver.
- 
  */
 - (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel;
 - (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel forKeys:(NSArray *)keys;
+
+/** 
+ When copying models, you may not neccessarily want to use NSCopying on certain properties, and just assign the actual value to the target model.
+ Subclasses can override this to return NO for certain properties. Default is YES.
+ */
+- (BOOL)shouldCopyValueForKey:(NSString *)key;
 
 /**
  Should be overridden by subclasses. Should return a JSONKey -> local property key mapping.

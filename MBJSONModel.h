@@ -99,4 +99,10 @@
  */
 + (NSDictionary *)reverseKeyValuePairingOfDictionary:(NSDictionary *)dictionary;
 
+/** Archives the object to disk and indexed via given key */
+- (void)writeToDiskWithKey:(NSString *)key;
+
+/** Retreive a model saved to disk via the writeToDiskWithKey: method, using that same key */
++ (instancetype)cachedModelFromDiskWithKey:(NSString *)key;
+
 @end

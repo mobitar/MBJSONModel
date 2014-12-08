@@ -327,11 +327,33 @@ NSString *MBSetSelectorForKey(NSString *key)
     if(self = [super init]) {
         NSArray *properties = [self extendedArrayOfProperties];
         for(NSString *property in properties) {
-            [self setValue:[aDecoder decodeObjectForKey:property] forKey:property];
+            if([self respondsToSelector:NSSelectorFromString(MBSetSelectorForKey(property))]) {
+                [self setValue:[aDecoder decodeObjectForKey:property] forKey:property];
+            }
         }
     }
     
     return self;
+}
+
++ (NSString *)pathForObjectKey:(NSString *)key
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"MBJSONModel-%@", key]];
+    return path;
+}
+
+- (void)writeToDiskWithKey:(NSString *)key
+{
+    NSString *path = [self.class pathForObjectKey:key];
+    BOOL success = [NSKeyedArchiver archiveRootObject:self toFile:path];
+    NSAssert(success, nil);
+}
+
++ (instancetype)cachedModelFromDiskWithKey:(NSString *)key
+{
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForObjectKey:key]];
 }
 
 @end

@@ -318,7 +318,15 @@ NSString *MBSetSelectorForKey(NSString *key)
 {
     NSDictionary *dictionary = [self dictionaryFromObjectProperties];
     for(NSString *key in dictionary) {
-        [aCoder encodeObject:dictionary[key] forKey:key];
+        id value = dictionary[key];
+        if([value respondsToSelector:@selector(encodeWithCoder:)] && [value conformsToProtocol:NSProtocolFromString(@"NSCopying")]) {
+            if([self respondsToSelector:NSSelectorFromString(MBSetSelectorForKey(key))]) {
+                @try {
+                    [aCoder encodeObject:dictionary[key] forKey:key];
+                }
+                @catch (NSException *exception) {}
+            }
+        }
     }
 }
 
@@ -352,6 +360,18 @@ NSString *MBSetSelectorForKey(NSString *key)
 }
 
 + (instancetype)cachedModelFromDiskWithKey:(NSString *)key
+{
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForObjectKey:key]];
+}
+
++ (BOOL)writeArrayOfModelsToDisk:(NSArray *)models key:(NSString *)key
+{
+    NSString *path = [self pathForObjectKey:key];
+    BOOL success = [NSKeyedArchiver archiveRootObject:models toFile:path];
+    return success;
+}
+
++ (NSArray *)cachedArrayOfModelsForKey:(NSString *)key
 {
     return [NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForObjectKey:key]];
 }

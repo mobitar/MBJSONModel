@@ -32,6 +32,11 @@ NSString *MBSetSelectorForKey(NSString *key)
     return self;
 }
 
++ (NSArray *)propertiesToSkipInEnumeration
+{
+    return @[@"description", @"superclass", @"debugDescription"];
+}
+
 + (NSArray *)arrayOfObjectPropertyNamesForClass:(Class)aClass
 {
     unsigned int count;
@@ -42,6 +47,8 @@ NSString *MBSetSelectorForKey(NSString *key)
         const char *propertyName = property_getName(property);
         [properties addObject:[NSString stringWithUTF8String:propertyName]];
     }
+    
+    [properties removeObjectsInArray:[self propertiesToSkipInEnumeration]];
     
     free(propertyList);
     return [properties copy];

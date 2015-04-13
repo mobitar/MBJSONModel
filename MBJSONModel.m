@@ -196,7 +196,10 @@ NSString *MBSetSelectorForKey(NSString *key)
                     BOOL isArray = [mappedKey[@"isArray"] boolValue];
                     Class relationshipClass = NSClassFromString(mappedKey[@"class"]);
                     if(relationshipClass) {
-                        if(isArray) {
+                        MBValueTransformer *transformer = [self transformerForKey:mappedKey[@"relationship"]];
+                        if(transformer) {
+                            [self setValue:[transformer transformedValue:value] forKey:mappedKey[@"relationship"]];
+                        } else if(isArray) {
                             [self setValue:[relationshipClass arrayOfModelsFromJSONDictionaryArray:value] forKey:mappedKey[@"relationship"]];
                         } else {
                             [self setValue:[relationshipClass modelFromJSONDictionary:value] forKey:mappedKey[@"relationship"]];
@@ -204,20 +207,7 @@ NSString *MBSetSelectorForKey(NSString *key)
                     }
                 }
             } else {
-                MBValueTransformer *transformer = nil;
-                if([mappedKey isKindOfClass:[NSString class]]) {
-                    transformer = [self.class valueTransformerForKey:mappedKey];
-                }
-                
-                if(!transformer) {
-                    NSString *selectorString = [mappedKey stringByAppendingString:@"JSONValueTransformer"];
-                    if([self.class respondsToSelector:NSSelectorFromString(selectorString)]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                        transformer = [self.class performSelector:NSSelectorFromString(selectorString)];
-#pragma clang diagnostic pop
-                    }
-                }
+                MBValueTransformer *transformer = [self transformerForKey:mappedKey];
                 if(transformer) {
                     value = [transformer transformedValue:value];
                     if(value) {
@@ -232,6 +222,26 @@ NSString *MBSetSelectorForKey(NSString *key)
             }
         }
     }
+}
+
+- (MBValueTransformer *)transformerForKey:(NSString *)key
+{
+    MBValueTransformer *transformer = nil;
+    if([key isKindOfClass:[NSString class]]) {
+        transformer = [self.class valueTransformerForKey:key];
+    }
+    
+    if(!transformer) {
+        NSString *selectorString = [key stringByAppendingString:@"JSONValueTransformer"];
+        if([self.class respondsToSelector:NSSelectorFromString(selectorString)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            transformer = [self.class performSelector:NSSelectorFromString(selectorString)];
+#pragma clang diagnostic pop
+        }
+    }
+
+    return transformer;
 }
 
 - (void)setNilValueForKey:(NSString *)key

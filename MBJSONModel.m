@@ -32,15 +32,25 @@ NSString *MBSetSelectorForKey(NSString *key)
     return self;
 }
 
++ (NSSet *)propertiesToSkipWhenEnumeratingObjectProperties
+{
+    return [NSSet setWithArray:@[@"description", @"debugDescription"]];
+}
+
 + (NSArray *)arrayOfObjectPropertyNamesForClass:(Class)aClass
 {
+    NSSet *propertiesToSkip = [self propertiesToSkipWhenEnumeratingObjectProperties];
     unsigned int count;
     objc_property_t *propertyList = class_copyPropertyList(aClass, &count);
     NSMutableArray *properties = [NSMutableArray new];
     for (int i = 0; i < count; i++) {
         objc_property_t property = propertyList[i];
         const char *propertyName = property_getName(property);
-        [properties addObject:[NSString stringWithUTF8String:propertyName]];
+        NSString *propertyNameString = [NSString stringWithUTF8String:propertyName];
+        if([propertiesToSkip containsObject:propertyNameString]) {
+            continue;
+        }
+        [properties addObject:propertyNameString];
     }
     
     free(propertyList);

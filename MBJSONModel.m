@@ -45,7 +45,8 @@ NSString *MBSetSelectorForKey(NSString *key)
     for (int i = 0; i < count; i++) {
         objc_property_t property = propertyList[i];
         const char *propertyName = property_getName(property);
-        [properties addObject:[NSString stringWithUTF8String:propertyName]];
+        NSString *propertyNameString = [NSString stringWithUTF8String:propertyName];
+        [properties addObject:propertyNameString];
     }
     
     [properties removeObjectsInArray:[self propertiesToSkipInEnumeration]];

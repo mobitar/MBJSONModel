@@ -33,6 +33,16 @@
  */
 - (NSData *)JSONDataRepresentation;
 
+/** 
+  Uses NSKeyedArchiver to archive the model into a data blob
+ */
+- (NSData *)dataRepresentation;
+
+/**
+ The inverse of -dataRepresentation. Convers the data back to a model
+ */
++ (instancetype)unarchiveModelFromData:(NSData *)data;
+
 
 /** Returns an array of strings representing each property the object has including its superclasses (not including NSObject) */
 - (NSArray *)extendedArrayOfProperties;

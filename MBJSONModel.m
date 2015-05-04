@@ -118,6 +118,16 @@ NSString *MBSetSelectorForKey(NSString *key)
     return data;
 }
 
+- (NSData *)dataRepresentation
+{
+    return [NSKeyedArchiver archivedDataWithRootObject:self];
+}
+
++ (instancetype)unarchiveModelFromData:(NSData *)data
+{
+    return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+}
+
 - (NSString *)JSONKeyForPropertyName:(NSString *)propertyName
 {
     NSDictionary *mapping = [self.class JSONKeyTranslationDictionary];

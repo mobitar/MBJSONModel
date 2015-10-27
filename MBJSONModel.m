@@ -395,7 +395,14 @@ NSString *MBSetSelectorForKey(NSString *key)
 
 + (instancetype)cachedModelFromDiskWithKey:(NSString *)key
 {
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForObjectKey:key]];
+    MBJSONModel *instance = [NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForObjectKey:key]];
+    [instance awakeFromCachedDisk];
+    return instance;
+}
+
+- (void)awakeFromCachedDisk
+{
+    
 }
 
 + (BOOL)writeArrayOfModelsToDisk:(NSArray *)models key:(NSString *)key

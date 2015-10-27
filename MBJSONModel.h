@@ -115,6 +115,9 @@
 /** Retreive a model saved to disk via the writeToDiskWithKey: method, using that same key */
 + (instancetype)cachedModelFromDiskWithKey:(NSString *)key;
 
+/** Called when a model is retreived via cachedModelFromDiskWithKey: */
+- (void)awakeFromCachedDisk;
+
 /** Archives an array of models. Retreivable by key */
 + (BOOL)writeArrayOfModelsToDisk:(NSArray *)models key:(NSString *)key;
 

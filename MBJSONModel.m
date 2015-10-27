@@ -346,13 +346,19 @@ NSString *MBSetSelectorForKey(NSString *key)
 {
     NSDictionary *dictionary = [self dictionaryFromObjectProperties];
     for(NSString *key in dictionary) {
+        BOOL shouldEncode = [self shouldCopyValueForKey:key];
+        if(!shouldEncode) {
+            continue;
+        }
         id value = dictionary[key];
         if([value respondsToSelector:@selector(encodeWithCoder:)] && [value conformsToProtocol:NSProtocolFromString(@"NSCopying")]) {
             if([self respondsToSelector:NSSelectorFromString(MBSetSelectorForKey(key))]) {
                 @try {
                     [aCoder encodeObject:dictionary[key] forKey:key];
                 }
-                @catch (NSException *exception) {}
+                @catch (NSException *exception) {
+                    NSLog(@"Exception while encoding key '%@': %@", key, exception);
+                }
             }
         }
     }

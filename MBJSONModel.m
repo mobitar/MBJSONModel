@@ -265,7 +265,7 @@ NSString *MBSetSelectorForKey(NSString *key)
 
 - (void)updateWithValuesOfModel:(MBJSONModel *)sourceModel
 {
-    NSAssert([self class] == [sourceModel class], @"Cannot copy properties of models of different classes");
+    NSAssert([self isKindOfClass:[sourceModel class]], @"Cannot copy properties of models of different classes");
     NSArray *properties = [sourceModel extendedArrayOfProperties];
     [self updateWithValuesOfModel:sourceModel forKeys:properties];
 }

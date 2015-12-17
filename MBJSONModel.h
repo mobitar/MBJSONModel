@@ -121,6 +121,9 @@
 /** Archives an array of models. Retreivable by key */
 + (BOOL)writeArrayOfModelsToDisk:(NSArray *)models key:(NSString *)key;
 
+/** Deletes previously cached model(s) for given key */
++ (BOOL)deleteCachedModelsForKey:(NSString *)key;
+
 /** Retreive archived models by key */
 + (NSArray *)cachedArrayOfModelsForKey:(NSString *)key;
 

@@ -405,6 +405,17 @@ NSString *MBSetSelectorForKey(NSString *key)
     
 }
 
++ (BOOL)deleteCachedModelsForKey:(NSString *)key
+{
+    NSString *path = [self pathForObjectKey:key];
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path];
+    NSError *error = nil;
+    if(exists) {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    }
+    return exists && !error;
+}
+
 + (BOOL)writeArrayOfModelsToDisk:(NSArray *)models key:(NSString *)key
 {
     NSString *path = [self pathForObjectKey:key];

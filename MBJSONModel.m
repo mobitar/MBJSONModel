@@ -370,7 +370,12 @@ NSString *MBSetSelectorForKey(NSString *key)
         NSArray *properties = [self extendedArrayOfProperties];
         for(NSString *property in properties) {
             if([self respondsToSelector:NSSelectorFromString(MBSetSelectorForKey(property))]) {
-                [self setValue:[aDecoder decodeObjectForKey:property] forKey:property];
+                @try {
+                    [self setValue:[aDecoder decodeObjectForKey:property] forKey:property];
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"Exception while decoding key '%@': %@", property, exception);
+                }
             }
         }
     }
@@ -425,7 +430,14 @@ NSString *MBSetSelectorForKey(NSString *key)
 
 + (NSArray *)cachedArrayOfModelsForKey:(NSString *)key
 {
-    return [NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForObjectKey:key]];
+    @try {
+        return [NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForObjectKey:key]];
+    }
+    @catch (NSException *e) {
+        NSLog(@"Error unarchiving object for key %@: %@", key, e);
+        return nil;
+    }
+    
 }
 
 @end
